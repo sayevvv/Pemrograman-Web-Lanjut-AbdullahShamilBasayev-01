@@ -14,10 +14,10 @@
         <!-- Centered Links -->
         <div class="hidden sm:block">
           <div class="flex space-x-4 justify-center">
-            <a href="/home" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('home') ? 'text-lg text-blue-700' : 'text-blue-600 hover:text-blue-500' }}">Home</a>
-            <a href="/categories" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('products') ? 'text-lg text-blue-700' : 'text-blue-600 hover:text-blue-500' }}">Products</a>
-            <a href="/sales" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('sales') ? 'text-lg text-blue-700' : 'text-blue-600 hover:text-blue-500' }}">Sales</a>
-            <a href="{{ route('profile', ['id' => 1, 'name' => 'Abdullah Shamil Basayev']) }}" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('profile') ? 'text-lg text-blue-700' : 'text-blue-600 hover:text-blue-500' }}">Profile</a>
+            <a href="/home" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('home') ? 'text-lg text-blue-700 bg-blue-100' : 'text-blue-600 hover:text-blue-500' }}">Home</a>
+            <a href="/categories" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('categories') ? 'text-lg text-blue-700 bg-blue-100' : 'text-blue-600 hover:text-blue-500' }}">Products</a>
+            <a href="/sales" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('sales') ? 'text-lg text-blue-700 bg-blue-100' : 'text-blue-600 hover:text-blue-500' }}">Sales</a>
+            <a href="{{ route('profile', ['id' => 1, 'name' => 'Abdullah Shamil Basayev']) }}" class="rounded-md px-3 py-2 text-sm font-medium {{ Request::is('profile') ? 'text-lg text-blue-700 bg-blue-100' : 'text-blue-600 hover:text-blue-500' }}">Profile</a>
           </div>
         </div>
       </div>
