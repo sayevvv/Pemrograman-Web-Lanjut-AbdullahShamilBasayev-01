@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_levels', function (Blueprint $table) {
-            $table->id('level_id');
-            $table->string('level_kode', 10)->unique();
-            $table->string('level_nama', 100);
+        Schema::create('t_penjualan', function (Blueprint $table) {
+            $table->id('penjualan_id');
+            $table->foreignId('user_id')->references('user_id')->on('m_user');
+            $table->string('pembeli', 50);
+            $table->string('penjualan_kode', 20);
+            $table->date('penjualan_tanggal');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_levels');
+        Schema::dropIfExists('t_penjualan');
     }
 };
