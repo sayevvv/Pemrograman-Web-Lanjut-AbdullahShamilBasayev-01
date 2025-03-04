@@ -55,8 +55,33 @@ class UserController extends Controller
         // $user = UserModel::findOrFail(1);
         // $user = UserModel::where('username', 'manager9')->firstOrFail();
 
-        $user = UserModel::where('level_id', 2)->count();
+        // PRAKTIKUM 2.3
+        // $user = UserModel::where('level_id', 2)->count();
         // dd($user);
+
+        // PRAKTIKUM 2.4
+        // $user = UserModel::firstOrCreate(
+        //     [
+        //         // 'username' => 'manager',
+        //         // 'nama' => 'Manager',
+        //         'username' => 'manager22',
+        //         'nama' => 'Manager Dua Dua',
+        //         'password' => Hash::make('12345'),
+        //         'level_id' => 2
+        //     ],
+        // );
+
+        $user = UserModel::firstOrNew(
+            [
+                // 'username' => 'manager22',
+                // 'nama' => 'Manager Dua Dua',
+                'username' => 'manager33',
+                'nama' => 'Manager Tiga Tiga',
+                'password' => Hash::make('12345'),
+                'level_id' => 2
+            ],
+        );
+        $user->save();
         return view('user', ['data' => $user]);
     }
 }
