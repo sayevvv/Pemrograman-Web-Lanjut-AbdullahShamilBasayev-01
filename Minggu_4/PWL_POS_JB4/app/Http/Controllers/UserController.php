@@ -110,20 +110,46 @@ class UserController extends Controller
         // $user->isClean();
         // dd($user->isDirty());
 
-        $user = UserModel::create([
-                'username' => 'manager11',
-                'nama' => 'Manager Sebelas',
-                'password' => Hash::make('12345'),
-                'level_id' => 2
-            ]);
+        // $user = UserModel::create([
+        //         'username' => 'manager11',
+        //         'nama' => 'Manager Sebelas',
+        //         'password' => Hash::make('12345'),
+        //         'level_id' => 2
+        //     ]);
 
-        $user->username = 'manager12';
-        $user->save();
+        // $user->username = 'manager12';
+        // $user->save();
 
-        $user->wasChanged();
-        $user->wasChanged('username');
-        $user->wasChanged(['username', 'level_id']);
-        $user->wasChanged('nama');
-        dd($user->wasChanged(['nama', 'username']));
+        // $user->wasChanged();
+        // $user->wasChanged('username');
+        // $user->wasChanged(['username', 'level_id']);
+        // $user->wasChanged('nama');
+        // dd($user->wasChanged(['nama', 'username']));
+
+        // PRAKTIKUM 2.6
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
+    }
+
+    public function tambah()
+    {
+        return view('user_tambah');
+    }
+
+    public function tambah_simpan(Request $request)
+    {
+        $data = [
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => Hash::make($request->password),
+            'level_id' => $request->level_id
+        ];
+        UserModel::create($data);
+        return redirect('/user');
+    }
+    public function hapus($id) {
+        $user = UserModel::find($id);
+        $user->delete();
+        return redirect('/user');
     }
 }
