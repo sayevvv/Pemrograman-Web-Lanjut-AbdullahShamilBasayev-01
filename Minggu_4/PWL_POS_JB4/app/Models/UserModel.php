@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\LevelModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserModel extends Model
 {
@@ -18,4 +20,8 @@ class UserModel extends Model
         'nama',
         'password'
     ]; // Mendefinisikan kolom yang dapat diisi oleh model ini
+
+    public function level():BelongsTo {
+        return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
+    }
 }
