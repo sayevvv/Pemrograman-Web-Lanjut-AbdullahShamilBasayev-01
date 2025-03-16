@@ -45,4 +45,33 @@ class KategoriController extends Controller
         ]);
         return redirect('/kategori');
     }
+    // Tugas Praktikum Nomer 3
+    public function edit($id)
+    {
+        $kategori = KategoriModel::findOrFail($id);
+        return view('kategori.edit', compact('kategori'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $kategori = KategoriModel::findOrFail($id);
+
+        $request->validate([
+            'kategori_kode' => 'required|unique:m_kategori,kategori_kode,' . $kategori->kategori_id . ',kategori_id',
+            'kategori_nama' => 'required',
+        ]);
+
+        $kategori->update($request->all());
+
+        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diupdate.');
+    }
+
+    // Tugas Praktikum Nomer 4
+    public function destroy($id)
+    {
+        $kategori = KategoriModel::findOrFail($id);
+        $kategori->delete();
+
+        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil dihapus.');
+    }
 }

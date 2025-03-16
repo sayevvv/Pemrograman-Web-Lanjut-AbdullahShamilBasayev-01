@@ -22,8 +22,9 @@ class KategoriDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            // ->addColumn('action', 'kategori.action')
-            ->setRowId('id');
+            // Tugas Praktikum Nomer 3
+            ->addColumn('action', 'kategori.action')
+            ->setRowId('kategori_id');
     }
 
     /**
@@ -43,7 +44,7 @@ class KategoriDataTable extends DataTable
                     ->setTableId('kategori-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    //->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->buttons([
@@ -52,7 +53,12 @@ class KategoriDataTable extends DataTable
                         Button::make('pdf'),
                         Button::make('print'),
                         Button::make('reset'),
-                        Button::make('reload')
+                        Button::make('reload'),
+                        // Tugas Praktikum Nomer 1
+                        Button::raw([
+                            'text' => 'Add',
+                            'action' => 'function () { window.location.href = "/kategori/create"; }'
+                        ])
                     ]);
     }
 
@@ -62,16 +68,17 @@ class KategoriDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            // Column::computed('action')
-            //       ->exportable(false)
-            //       ->printable(false)
-            //       ->width(60)
-            //       ->addClass('text-center'),
             Column::make('kategori_id')->addClass('text-center'),
             Column::make('kategori_kode')->addClass('text-center'),
             Column::make('kategori_nama')->addClass('text-center'),
             Column::make('created_at')->addClass('text-center'),
             Column::make('updated_at')->addClass('text-center'),
+            // Tugas Praktikum Nomer 3
+            Column::computed('action')
+                  ->exportable(false)
+                  ->printable(false)
+                  ->width(60)
+                  ->addClass('text-center')
         ];
     }
 

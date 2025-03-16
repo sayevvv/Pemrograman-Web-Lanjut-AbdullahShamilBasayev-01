@@ -13,8 +13,15 @@ return new class extends Migration
     {
         Schema::create('t_stok', function (Blueprint $table) {
             $table->id('stok_id');
-            $table->foreignId('barang_id')->references('barang_id')->on('m_barang');
-            $table->foreignId('user_id')->references('user_id')->on('m_user');
+
+            $table->foreignId('barang_id')
+                  ->constrained('m_barang', 'barang_id')
+                  ->onDelete('cascade'); // jika barang dihapus, stok ikut terhapus
+
+            $table->foreignId('user_id')
+                  ->constrained('m_user', 'user_id')
+                  ->onDelete('cascade'); // opsional: jika user dihapus, stoknya ikut terhapus juga
+
             $table->date('stok_tanggal');
             $table->integer('stok_jumlah');
             $table->timestamps();

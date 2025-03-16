@@ -327,6 +327,12 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
+        // Tugas Praktikum Nomer 2
+        [
+            'text' => 'Kategori',
+            'url' => 'kategori',
+            'icon' => 'fas fa-tags',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
