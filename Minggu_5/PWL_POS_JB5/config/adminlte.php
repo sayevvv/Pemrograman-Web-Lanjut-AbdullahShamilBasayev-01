@@ -306,6 +306,21 @@ return [
             'topnav_right' => true,
         ],
         [
+            'text' => 'Kategori',
+            'icon' => 'fas fa-fw fa-tags',
+            'topnav' => true,
+            'submenu' => [
+                [
+                    'text' => 'List Kategori',
+                    'url' => 'kategori',
+                ],
+                [
+                    'text' => 'Tambah Kategori',
+                    'url' => 'kategori/create',
+                ],
+            ],
+        ],
+        [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
