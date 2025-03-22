@@ -20,7 +20,9 @@ return new class extends Migration
             $table->timestamps();
 
             // Mendefinisikan foreign key pada kolom level_id mengacu pada kolom id pada tabel m_levels
-            $table->foreign('level_id')->references('level_id')->on('m_level');
+            $table->foreign('level_id')
+                    ->references('level_id')->on('m_level')
+                    ->onDelete('cascade');
         });
     }
 
