@@ -1,4 +1,5 @@
 @extends('layouts.template')
+
 @section('content')
     <div class="card card-outline card-primary">
         <div class="card-header">
@@ -19,11 +20,15 @@
                     </tr>
                     <tr>
                         <th>Barang</th>
-                        <td>{{ $stok->barang->barang_nama }} ({{ $stok->barang->barang_kode }})</td>
+                        <td>{{ $stok->barang->barang_nama ?? '-' }} ({{ $stok->barang->barang_kode ?? '-' }})</td>
+                    </tr>
+                    <tr>
+                        <th>Supplier</th>
+                        <td>{{ $stok->supplier->supplier_nama ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>User</th>
-                        <td>{{ $stok->user->nama }} ({{ $stok->user->username }})</td>
+                        <td>{{ $stok->user->nama ?? '-' }} ({{ $stok->user->username ?? '-' }})</td>
                     </tr>
                     <tr>
                         <th>Tanggal</th>

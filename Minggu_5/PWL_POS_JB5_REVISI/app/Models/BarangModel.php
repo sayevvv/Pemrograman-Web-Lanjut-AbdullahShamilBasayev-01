@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\StokModel;
 use App\Models\KategoriModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,7 +30,7 @@ class BarangModel extends Model
     // Relasi ke model Stok
     public function stok()
     {
-        return $this->hasMany(Stok::class, 'barang_id', 'barang_id');
+        return $this->hasMany(StokModel::class, 'barang_id', 'barang_id');
     }
 
 }

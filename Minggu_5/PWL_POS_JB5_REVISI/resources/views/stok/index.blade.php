@@ -1,4 +1,5 @@
 @extends('layouts.template')
+
 @section('content')
     <div class="card card-outline card-primary">
         <div class="card-header">
@@ -24,13 +25,23 @@
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Filter:</label>
                         <div class="col-3">
-                            <select class="form-control" id="barang_id" name="barang_id" required>
-                                <option value="">- Semua -</option>
+                            <select class="form-control" id="barang_id" name="barang_id">
+                                <option value="">- Semua Barang -</option>
                                 @foreach($barang as $item)
                                     <option value="{{ $item->barang_id }}">{{ $item->barang_nama }}</option>
                                 @endforeach
                             </select>
                             <small class="form-text text-muted">Nama Barang</small>
+                        </div>
+
+                        <div class="col-3">
+                            <select class="form-control" id="supplier_id" name="supplier_id">
+                                <option value="">- Semua Supplier -</option>
+                                @foreach($supplier as $item)
+                                    <option value="{{ $item->supplier_id }}">{{ $item->supplier_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Supplier</small>
                         </div>
                     </div>
                 </div>
@@ -42,6 +53,7 @@
                         <th>ID</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
+                        <th>Supplier</th>
                         <th>Jumlah</th>
                         <th>Tanggal</th>
                         <th>Aksi</th>
@@ -66,49 +78,21 @@
                     "type": "POST",
                     "data": function(d) {
                         d.barang_id = $('#barang_id').val();
+                        d.supplier_id = $('#supplier_id').val();
                     }
                 },
                 columns: [
-                    {
-                        data: "DT_RowIndex",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: "barang.barang_kode",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "barang.barang_nama",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "stok_jumlah",
-                        className: "text-center",
-                        orderable: true,
-                        searchable: false
-                    },
-                    {
-                        data: "stok_tanggal",
-                        className: "text-center",
-                        orderable: true,
-                        searchable: false
-                    },
-                    {
-                        data: "aksi",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    }
+                    { data: "DT_RowIndex", className: "text-center", orderable: false, searchable: false },
+                    { data: "barang.barang_kode", className: "", orderable: true, searchable: true },
+                    { data: "barang.barang_nama", className: "", orderable: true, searchable: true },
+                    { data: "supplier.supplier_nama", className: "", orderable: true, searchable: true },
+                    { data: "stok_jumlah", className: "text-center", orderable: true, searchable: false },
+                    { data: "stok_tanggal", className: "text-center", orderable: true, searchable: false },
+                    { data: "aksi", className: "text-center", orderable: false, searchable: false }
                 ]
             });
 
-            $('#barang_id').on('change', function() {
+            $('#barang_id, #supplier_id').on('change', function() {
                 dataStok.ajax.reload();
             });
         });

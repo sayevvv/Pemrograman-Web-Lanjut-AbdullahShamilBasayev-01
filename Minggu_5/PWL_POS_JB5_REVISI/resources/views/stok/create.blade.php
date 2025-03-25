@@ -25,6 +25,22 @@
                     </div>
                 </div>
 
+                {{-- Supplier --}}
+                <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Supplier</label>
+                    <div class="col-11">
+                        <select class="form-control" id="supplier_id" name="supplier_id" required>
+                            <option value="">- Pilih Supplier -</option>
+                            @foreach ($supplier as $s)
+                                <option value="{{ $s->supplier_id }}">{{ $s->supplier_nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('supplier_id')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
                 {{-- Tanggal --}}
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Tanggal</label>

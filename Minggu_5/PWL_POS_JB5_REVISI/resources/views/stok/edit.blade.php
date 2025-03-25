@@ -37,6 +37,23 @@
                     </div>
 
                     <div class="form-group row">
+                        <label class="col-2 control-label col-form-label">Supplier</label>
+                        <div class="col-10">
+                            <select class="form-control" id="supplier_id" name="supplier_id" required>
+                                <option value="">- Pilih Supplier -</option>
+                                @foreach ($supplier as $s)
+                                    <option value="{{ $s->supplier_id }}" @if ($s->supplier_id == $stok->supplier_id) selected @endif>
+                                        {{ $s->supplier_nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('supplier_id')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label class="col-2 control-label col-form-label">User</label>
                         <div class="col-10">
                             <select class="form-control" id="user_id" name="user_id" required>

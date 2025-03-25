@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StokModel;
 use App\Models\BarangModel;
 use App\Models\UserModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -25,17 +26,22 @@ class StokController extends Controller
         $activeMenu = 'stok';
 
         $barang = BarangModel::all(); // untuk filter barang
+        $supplier = SupplierModel::all(); // untuk filter supplier
 
-        return view('stok.index', compact('breadcrumb', 'page', 'activeMenu', 'barang'));
+        return view('stok.index', compact('breadcrumb', 'page', 'activeMenu', 'barang', 'supplier'));
     }
 
     // Ambil data stok dalam bentuk json untuk datatables
     public function list(Request $request)
     {
-        $stok = StokModel::with(['barang', 'user']);
+        $stok = StokModel::with(['barang', 'user', 'supplier']);
 
         if ($request->barang_id) {
             $stok->where('barang_id', $request->barang_id);
+        }
+
+        if ($request->supplier_id) {
+            $stok->where('supplier_id', $request->supplier_id);
         }
 
         return DataTables::of($stok)
@@ -68,9 +74,10 @@ class StokController extends Controller
 
         $barang = BarangModel::all();
         $user = UserModel::all();
+        $supplier = SupplierModel::all();
         $activeMenu = 'stok';
 
-        return view('stok.create', compact('breadcrumb', 'page', 'barang', 'user', 'activeMenu'));
+        return view('stok.create', compact('breadcrumb', 'page', 'barang', 'user', 'supplier', 'activeMenu'));
     }
 
     // Simpan data stok baru
@@ -79,6 +86,7 @@ class StokController extends Controller
         $request->validate([
             'barang_id' => 'required|integer',
             'user_id' => 'required|integer',
+            'supplier_id' => 'required|integer',
             'stok_tanggal' => 'required|date',
             'stok_jumlah' => 'required|integer|min:1',
         ]);
@@ -91,7 +99,7 @@ class StokController extends Controller
     // Tampilkan detail stok
     public function show($id)
     {
-        $stok = StokModel::with(['barang', 'user'])->find($id);
+        $stok = StokModel::with(['barang', 'user', 'supplier'])->find($id);
 
         $breadcrumb = (object) [
             'title' => 'Detail Stok',
@@ -113,6 +121,7 @@ class StokController extends Controller
         $stok = StokModel::find($id);
         $barang = BarangModel::all();
         $user = UserModel::all();
+        $supplier = SupplierModel::all();
 
         $breadcrumb = (object) [
             'title' => 'Edit Stok',
@@ -125,7 +134,7 @@ class StokController extends Controller
 
         $activeMenu = 'stok';
 
-        return view('stok.edit', compact('breadcrumb', 'page', 'stok', 'barang', 'user', 'activeMenu'));
+        return view('stok.edit', compact('breadcrumb', 'page', 'stok', 'barang', 'user', 'supplier', 'activeMenu'));
     }
 
     // Simpan perubahan data stok
@@ -134,6 +143,7 @@ class StokController extends Controller
         $request->validate([
             'barang_id' => 'required|integer',
             'user_id' => 'required|integer',
+            'supplier_id' => 'required|integer',
             'stok_tanggal' => 'required|date',
             'stok_jumlah' => 'required|integer|min:1',
         ]);
