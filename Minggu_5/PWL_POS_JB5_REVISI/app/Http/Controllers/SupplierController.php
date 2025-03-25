@@ -72,7 +72,7 @@ class SupplierController extends Controller
             'supplier_alamat' => 'required|string|max:255',
         ]);
 
-        SupplierModal::create($request->all());
+        SupplierModel::create($request->all());
 
         return redirect('/supplier')->with('success', 'Data supplier berhasil disimpan');
     }
@@ -124,7 +124,7 @@ class SupplierController extends Controller
             'supplier_alamat' => 'required|string|max:255',
         ]);
 
-        SupplierModal::find($id)->update($request->all());
+        SupplierModel::find($id)->update($request->all());
 
         return redirect('/supplier')->with('success', 'Data supplier berhasil diubah');
     }
@@ -139,7 +139,7 @@ class SupplierController extends Controller
         }
 
         try {
-            SupplierModal::destroy($id);
+            SupplierModel::destroy($id);
             return redirect('/supplier')->with('success', 'Data supplier berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect('/supplier')->with('error', 'Gagal menghapus data supplier karena data masih terhubung dengan tabel lain');
