@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('t_stok', function (Blueprint $table) {
             $table->id('stok_id');
+            $table->foreignId('supplier_id')
+            ->constrained('m_supplier', 'supplier_id')
+            ->onDelete('cascade');
             $table->foreignId('barang_id')
             ->constrained('m_barang', 'barang_id')
             ->onDelete('cascade');

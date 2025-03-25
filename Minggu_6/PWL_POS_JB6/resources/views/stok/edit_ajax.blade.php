@@ -30,6 +30,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <label>Supplier</label>
+                        <select name="barang_id" id="barang_id" class="form-control" required>
+                            <option value="">- Pilih Barang -</option>
+                            @foreach ($supplier as $s)
+                                <option {{ $s->suplier_id == $stok->suplier_id ? 'selected' : '' }}
+                                    value="{{ $s->supplier_id }}">{{ $s->supplier_nama}}</option>
+                            @endforeach
+                        </select>
+                        <small id="error-barang_id" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
                         <label>Barang</label>
                         <select name="barang_id" id="barang_id" class="form-control" required>
                             <option value="">- Pilih Barang -</option>
@@ -76,6 +87,10 @@
         $(document).ready(function () {
             $("#form-edit").validate({
                 rules: {
+                    supplier_id: {
+                        required: true,
+                        number: true
+                    },
                     barang_id: {
                         required: true,
                         number: true
