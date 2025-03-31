@@ -131,6 +131,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [BarangController::class, 'edit']); // menampilkan halaman form edit barang
             Route::put('/{id}', [BarangController::class, 'update']);    // menyimpan perubahan data barang
             Route::delete('/{id}', [BarangController::class, 'destroy']); // menghapus data barang
+
+            // JOBSHEET 8
+            Route::get('/import', [BarangController::class, 'import']); // ajax upload excel
+            Route::post('/import_ajax', [BarangController::class, 'import_ajax']); // ajax import excel
+
         });
     });
 
