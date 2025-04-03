@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\StokModel;
-use App\Models\BarangModel;
 use App\Models\UserModel;
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
+use App\Models\SupplierModel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use App\Models\SupplierModel;
 
 class StokController extends Controller
 {
@@ -308,5 +309,63 @@ public function delete_ajax(Request $request, $id)
 
         return redirect('/');
     }
+    public function import()
+     {
+         return view('stok.import');
+     }
+     public function import_ajax(Request $request)
+     {
+         if ($request->ajax() || $request->wantsJson()) {
+             $rules = ['file_stok' => 'required|mimes:xlsx|max:1024'];
+             $validator = Validator::make($request->all(), $rules);
 
+             if ($validator->fails()) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Validasi Gagal',
+                     'msgField' => $validator->errors()
+                 ]);
+             }
+
+             $file = $request->file('file_stok'); // Ambil file dari request
+             $reader = IOFactory::createReader('Xlsx'); // Load reader file Excel
+             $reader->setReadDataOnly(true); // Hanya membaca data
+             $spreadsheet = $reader->load($file->getRealPath()); // Load file Excel
+             $sheet = $spreadsheet->getActiveSheet(); // Ambil sheet yang aktif
+             $data = $sheet->toArray(null, false, true, true);
+
+             $insert = [];
+             if (count($data) > 1) { // Jika data lebih dari 1 baris
+                 foreach ($data as $baris => $value) {
+                     if ($baris > 1) { // Baris ke-1 adalah header, maka lewati
+                         $insert[] = [
+                             'stok_id' => $value['A'],
+                             'barang_id' => $value['B'],
+                             'supplier_id' => $value['C'],
+                             'stok_tanggal' => $value['D'],
+                             'stok_jumlah' => $value['E'],
+                             'created_at'  => now(),
+                         ];
+                     }
+                 }
+
+                 if (count($insert) > 0) {
+                     // Insert data ke database, jika data sudah ada, maka diabaikan
+                     StokModel::insertOrIgnore($insert);
+                 }
+
+                 return response()->json([
+                     'status' => true,
+                     'message' => 'Data berhasil diimport'
+                 ]);
+             } else {
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Tidak ada data yang diimport'
+                 ]);
+             }
+         }
+
+         return redirect('/');
+     }
 }
