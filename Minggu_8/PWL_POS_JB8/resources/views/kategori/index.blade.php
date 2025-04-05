@@ -7,6 +7,7 @@
             <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info">Import Kategori</button>
             {{-- <button onclick="modalAction('{{ url('/kategori/create') }}')" class="btn btn-primary">Tambah Data</button> --}}
             <a href="{{ url('/kategori/export_excel') }}" class="btn btn-primary"><i class="fa fa-fileexcel"></i> Export Kategori</a>
+            <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-warning"><i class="fa fa-filepdf"></i> Export Kategori (PDF)</a>
             <button onclick="modalAction('{{ url('/kategori/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
         </div>
     </div>
