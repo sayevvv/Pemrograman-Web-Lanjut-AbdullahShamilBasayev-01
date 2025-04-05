@@ -289,6 +289,62 @@ class LevelController extends Controller
 
         return redirect('/');
     }
+    public function export_excel()
+    {
+        // Ambil data level dari database
+        $levels = LevelModel::select('level_kode', 'level_nama')
+            ->orderBy('level_kode')
+            ->get();
+
+        // Buat objek Spreadsheet baru
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set judul kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Level');
+        $sheet->setCellValue('C1', 'Nama Level');
+
+        // Bold untuk header
+        $sheet->getStyle('A1:C1')->getFont()->setBold(true);
+
+        // Isi data
+        $no = 1;
+        $baris = 2;
+
+        foreach ($levels as $item) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $item->level_kode);
+            $sheet->setCellValue('C' . $baris, $item->level_nama);
+            $no++;
+            $baris++;
+        }
+
+        // Auto width untuk setiap kolom
+        foreach (range('A', 'C') as $kolom) {
+            $sheet->getColumnDimension($kolom)->setAutoSize(true);
+        }
+
+        // Set judul sheet
+        $sheet->setTitle('Data Level');
+
+        // Buat writer dan atur nama file
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Level ' . date('Y-m-d H-i-s') . '.xlsx';
+
+        // Header untuk download file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        // Output file
+        $writer->save('php://output');
+        exit;
+    }
     // public function index()
     // {
     //     // DB::insert('insert into m_level(level_kode, level_nama, created_at) values(?, ?, ?)', ['CUS', 'Pelanggan', now()]);

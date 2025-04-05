@@ -362,6 +362,66 @@ class UserController extends Controller
 
         return redirect('/');
     }
+    public function export_excel()
+    {
+        // Ambil data user beserta levelnya
+        $users = UserModel::with('level')
+            ->orderBy('username')
+            ->get();
+
+        // Buat objek spreadsheet
+        $spreadsheet = $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Username');
+        $sheet->setCellValue('C1', 'Nama Lengkap');
+        $sheet->setCellValue('D1', 'Level Kode');
+        $sheet->setCellValue('E1', 'Nama Level');
+
+        // Tebalkan header
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
+
+        // Isi data
+        $no = 1;
+        $baris = 2;
+
+        foreach ($users as $user) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $user->username);
+            $sheet->setCellValue('C' . $baris, $user->nama);
+            $sheet->setCellValue('D' . $baris, $user->level->level_kode ?? '-');
+            $sheet->setCellValue('E' . $baris, $user->level->level_nama ?? '-');
+            $no++;
+            $baris++;
+        }
+
+        // Auto size kolom
+        foreach (range('A', 'E') as $kolom) {
+            $sheet->getColumnDimension($kolom)->setAutoSize(true);
+        }
+
+        // Set judul sheet
+        $sheet->setTitle('Data User');
+
+        // Buat writer dan nama file
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data User ' . date('Y-m-d H-i-s') . '.xlsx';
+
+        // Header untuk download file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        // Output file
+        $writer->save('php://output');
+        exit;
+    }
 
     // public function index()
     // {

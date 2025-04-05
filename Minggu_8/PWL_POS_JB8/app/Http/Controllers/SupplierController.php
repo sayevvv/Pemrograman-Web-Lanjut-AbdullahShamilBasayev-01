@@ -318,4 +318,62 @@ class SupplierController extends Controller
 
          return redirect('/');
      }
+     public function export_excel()
+{
+    // Ambil data supplier dari database
+    $supplier = SupplierModel::select('supplier_kode', 'supplier_nama', 'supplier_alamat')
+        ->orderBy('supplier_nama')
+        ->get();
+
+    // Buat objek Spreadsheet baru
+    $spreadsheet = $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Set judul kolom
+    $sheet->setCellValue('A1', 'No');
+    $sheet->setCellValue('B1', 'Kode Supplier');
+    $sheet->setCellValue('C1', 'Nama Supplier');
+    $sheet->setCellValue('D1', 'Alamat Supplier');
+
+    // Buat header menjadi bold
+    $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+
+    // Isi data
+    $no = 1;
+    $baris = 2;
+
+    foreach ($supplier as $item) {
+        $sheet->setCellValue('A' . $baris, $no);
+        $sheet->setCellValue('B' . $baris, $item->supplier_kode);
+        $sheet->setCellValue('C' . $baris, $item->supplier_nama);
+        $sheet->setCellValue('D' . $baris, $item->supplier_alamat);
+        $no++;
+        $baris++;
+    }
+
+    // Set auto width kolom
+    foreach (range('A', 'D') as $kolom) {
+        $sheet->getColumnDimension($kolom)->setAutoSize(true);
+    }
+
+    // Set judul sheet
+    $sheet->setTitle('Data Supplier');
+
+    // Siapkan file untuk diunduh
+    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $filename = 'Data Supplier ' . date('Y-m-d H-i-s') . '.xlsx';
+
+    // Header response
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    header('Cache-Control: cache, must-revalidate');
+    header('Pragma: public');
+
+    // Simpan ke output
+    $writer->save('php://output');
+    exit;
+}
 }

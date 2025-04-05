@@ -368,4 +368,66 @@ public function delete_ajax(Request $request, $id)
 
          return redirect('/');
      }
+     public function export_excel()
+        {
+            // Ambil data stok lengkap dengan relasi barang, user, dan supplier
+            $stok = StokModel::with(['barang', 'user', 'supplier'])
+                ->orderBy('stok_tanggal', 'desc')
+                ->get();
+
+            // Buat spreadsheet baru
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Judul kolom
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Tanggal Stok');
+            $sheet->setCellValue('C1', 'Nama Barang');
+            $sheet->setCellValue('D1', 'Jumlah Stok');
+            $sheet->setCellValue('E1', 'Supplier');
+            $sheet->setCellValue('F1', 'User Input');
+
+            // Bold header
+            $sheet->getStyle('A1:F1')->getFont()->setBold(true);
+
+            // Data dimulai dari baris ke-2
+            $no = 1;
+            $baris = 2;
+
+            foreach ($stok as $item) {
+                $sheet->setCellValue('A' . $baris, $no);
+                $sheet->setCellValue('B' . $baris, $item->stok_tanggal);
+                $sheet->setCellValue('C' . $baris, $item->barang->barang_nama ?? '-');
+                $sheet->setCellValue('D' . $baris, $item->stok_jumlah);
+                $sheet->setCellValue('E' . $baris, $item->supplier->supplier_nama ?? '-');
+                $sheet->setCellValue('F' . $baris, $item->user->username ?? '-');
+                $no++;
+                $baris++;
+            }
+
+            // Auto size kolom
+            foreach (range('A', 'F') as $kolom) {
+                $sheet->getColumnDimension($kolom)->setAutoSize(true);
+            }
+
+            // Set judul sheet
+            $sheet->setTitle('Data Stok');
+
+            // Buat writer dan nama file
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $filename = 'Data Stok ' . date('Y-m-d H-i-s') . '.xlsx';
+
+            // Header untuk download file
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Cache-Control: cache, must-revalidate');
+            header('Pragma: public');
+
+            // Output file
+            $writer->save('php://output');
+            exit;
+        }
 }
