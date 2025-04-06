@@ -24,18 +24,6 @@ class ProfileController extends Controller
         return view('profile.index', compact('user', 'activeMenu', 'breadcrumb', 'page'));
     }
 
-    public function profilePicture($id)
-    {
-        $user = UserModel::findOrFail($id);
-
-        $path = public_path('uploads/profile_images/' . $user->profile_picture);
-
-        if (!file_exists($path) || !$user->profile_picture) {
-            $path = public_path('uploads/profile_images/default-profile.png');
-        }
-
-        return response()->file($path);
-    }
     public function editPfp()
     {
         $user = Auth::user();
