@@ -1,14 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\BarangController;
-use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,9 +30,15 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 
+
 Route::middleware(['auth'])->group(function () {
-        // JOBSHEET 5 Praktikum 2
+
+    Route::get('/profil', [ProfileController::class, 'profil']);
+    Route::get('/profile/picture/{id}', [ProfileController::class, 'profilePicture'])->name('profile.picture');
+    // JOBSHEET 5 Praktikum 2
     Route::get('/', [WelcomeController::class, 'index']);
+    Route::get('/profile/edit_pfp', [ProfileController::class, 'editPfp'])->name('profile.editPfp');
+    Route::post('/profile/update_pfp', [ProfileController::class, 'updatePfp'])->name('profile.updatePfp');
 
     // TUGAS 3 JOBSHEET 7
     Route::middleware(['authorize:ADM'])->group(function () {

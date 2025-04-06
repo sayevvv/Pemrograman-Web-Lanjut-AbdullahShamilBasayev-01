@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -424,7 +425,7 @@ class UserController extends Controller
         $writer->save('php://output');
         exit;
     }
-    
+
     public function export_pdf()
     {
         $user = UserModel::select('level_id', 'username', 'nama')
@@ -439,6 +440,7 @@ class UserController extends Controller
 
         return $pdf->stream('Data User ' . date('Y-m-d H:i:s') . '.pdf');
     }
+
 
     // public function index()
     // {

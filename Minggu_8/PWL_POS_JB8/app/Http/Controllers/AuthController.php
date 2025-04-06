@@ -85,7 +85,7 @@ class AuthController extends Controller
             'level_id' => $request->level_id,
             'username' => $request->username,
             'nama' => $request->nama,
-            'password' =>  bcrypt($request->password), 
+            'password' =>  bcrypt($request->password),
         ]);
 
         Auth::login($user);
@@ -96,4 +96,6 @@ class AuthController extends Controller
             'redirect' => url('/')
         ]);
     }
+
+    
 }
