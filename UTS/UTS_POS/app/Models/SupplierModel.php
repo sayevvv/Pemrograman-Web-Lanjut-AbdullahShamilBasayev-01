@@ -17,4 +17,12 @@ class SupplierModel extends Model
         'supplier_nama',
         'supplier_alamat',
     ];
+
+    /**
+     * Relasi ke model StokModel (hasMany)
+     */
+    public function stok()
+    {
+        return $this->hasMany(StokModel::class, 'supplier_id', 'supplier_id');
+    }
 }

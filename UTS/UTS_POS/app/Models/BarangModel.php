@@ -19,4 +19,15 @@ class BarangModel extends Model
         'harga_beli',
         'harga_jual',
     ];
+
+    // Relasi ke model Kategori
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriModel::class, 'kategori_id', 'kategori_id');
+    }
+    // Relasi ke model Stok
+    public function stok()
+    {
+        return $this->hasMany(Stok::class, 'barang_id', 'barang_id');
+    }
 }

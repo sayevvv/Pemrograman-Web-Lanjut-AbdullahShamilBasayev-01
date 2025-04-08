@@ -19,4 +19,14 @@ class UserModel extends Model
         'password',
         'profile_picture',
     ];
+
+    //Relasi dengan tabel level
+    public function level():BelongsTo {
+        return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
+    }
+    // Relasi dengan tabel stok
+    public function stok()
+    {
+        return $this->hasMany(StokModel::class, 'user_id', 'user_id');
+    }
 }
