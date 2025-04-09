@@ -188,4 +188,36 @@ class KategoriController extends Controller
 
         return redirect('/');
     }
+
+    // Tampilkan konfirmasi hapus
+    public function confirm_ajax(string $id)
+    {
+        $kategori = KategoriModel::find($id);
+
+        return view('kategori.confirm_ajax', ['kategori' => $kategori]);
+    }
+
+    // Hapus data kategori
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $kategori = KategoriModel::find($id);
+
+            if ($kategori) {
+                $kategori->delete();
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data kategori berhasil dihapus.',
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan.',
+            ]);
+        }
+
+        return redirect('/');
+    }
 }

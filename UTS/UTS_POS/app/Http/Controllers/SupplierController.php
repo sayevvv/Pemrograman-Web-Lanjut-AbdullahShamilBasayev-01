@@ -229,4 +229,30 @@ class SupplierController extends Controller
 
          return redirect('/');
      }
+     public function confirm_ajax(string $id)
+     {
+         $supplier = SupplierModel::find($id);
+         return view('supplier.confirm_ajax', ['supplier' => $supplier]);
+     }
+
+     // Hapus data supplier
+     public function delete_ajax(Request $request, $id)
+     {
+         if ($request->ajax() || $request->wantsJson()) {
+             $supplier = SupplierModel::find($id);
+             if ($supplier) {
+                 $supplier->delete();
+                 return response()->json([
+                     'status' => true,
+                     'message' => 'Data supplier berhasil dihapus.',
+                 ]);
+             }
+             return response()->json([
+                 'status' => false,
+                 'message' => 'Data tidak ditemukan.',
+             ]);
+         }
+
+         return redirect('/');
+     }
 }
