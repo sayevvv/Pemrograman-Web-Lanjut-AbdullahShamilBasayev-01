@@ -48,17 +48,21 @@ class StokController extends Controller
         return DataTables::of($stok)
             ->addIndexColumn()
             ->addColumn('aksi', function ($s) {
-                $btn  = '<a href="' . url('/stok/' . $s->stok_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/stok/' . $s->stok_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/stok/' . $s->stok_id) . '">'
-                      . csrf_field()
-                      . method_field('DELETE')
-                      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data ini?\');">Hapus</button>'
-                      . '</form>';
-                return $btn;
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
+            //     $btn  = '<a href="' . url('/stok/' . $s->stok_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+            //     $btn .= '<a href="' . url('/stok/' . $s->stok_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
+            //     $btn .= '<form class="d-inline-block" method="POST" action="' . url('/stok/' . $s->stok_id) . '">'
+            //           . csrf_field()
+            //           . method_field('DELETE')
+            //           . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data ini?\');">Hapus</button>'
+            //           . '</form>';
+            //     return $btn;
+            $btn  = '<button onclick="modalAction(\'' . url('/stok/' . $s->stok_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+            $btn .= '<button onclick="modalAction(\'' . url('/stok/' . $s->stok_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+            $btn .= '<button onclick="modalAction(\'' . url('/stok/' . $s->stok_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+            return $btn;
+        })
+        ->rawColumns(['aksi'])
+        ->make(true);
     }
 
     // Menampilkan form tambah stok
@@ -210,6 +214,62 @@ class StokController extends Controller
             return response()->json([
                 'status'  => true,
                 'message' => 'Data stok berhasil disimpan.',
+            ]);
+        }
+
+        return redirect('/');
+    }
+    // Form edit data stok
+    public function edit_ajax(string $id)
+    {
+        $stok = StokModel::find($id);
+        $barang = BarangModel::select('barang_id', 'barang_nama')->get();
+        $user = UserModel::select('user_id', 'nama')->get();
+        $supplier = SupplierModel::select('supplier_id', 'supplier_nama')->get(); // Ambil daftar supplier
+
+        return view('stok.edit_ajax', [
+            'stok' => $stok,
+            'barang' => $barang,
+            'user' => $user,
+            'supplier' => $supplier,
+        ]);
+    }
+
+    // Update data stok
+    public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'barang_id'    => 'required|integer|exists:m_barang,barang_id',
+                'user_id'      => 'required|integer|exists:m_user,user_id',
+                'supplier_id'  => 'required|integer|exists:m_supplier,supplier_id', // Tambahkan validasi supplier
+                'stok_tanggal' => 'required|date',
+                'stok_jumlah'  => 'required|integer|min:1',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $stok = StokModel::find($id);
+            if ($stok) {
+                $stok->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data stok berhasil diupdate.',
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
             ]);
         }
 

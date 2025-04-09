@@ -26,13 +26,18 @@ class LevelController extends Controller
         return DataTables::of($level)
             ->addIndexColumn()
             ->addColumn('aksi', function ($level) {
-                $btn  = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/level/' . $level->level_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/level/' . $level->level_id) . '">'
-                      . csrf_field()
-                      . method_field('DELETE')
-                      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus?\')">Hapus</button>'
-                      . '</form>';
+                // $btn  = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                // $btn .= '<a href="' . url('/level/' . $level->level_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
+                // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/level/' . $level->level_id) . '">'
+                //       . csrf_field()
+                //       . method_field('DELETE')
+                //       . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus?\')">Hapus</button>'
+                //       . '</form>';
+                // return $btn;
+                // Menambahkan kolom aksi dengan tombol Detail, Edit, dan Hapus
+                $btn  = '<button onclick="modalAction(\'' . url('/level/' . $level->level_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/level/' . $level->level_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/level/' . $level->level_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -144,18 +149,49 @@ class LevelController extends Controller
 
         return redirect('/');
     }
-    // public function index()
-    // {
-    //     // DB::insert('insert into m_level(level_kode, level_nama, created_at) values(?, ?, ?)', ['CUS', 'Pelanggan', now()]);
-    //     // return 'Insert data baru berhasil';
+    // Menampilkan halaman edit level (AJAX)
+    public function edit_ajax(string $id)
+    {
+        $level = LevelModel::find($id);
 
-    //     // $row = DB::update('update m_level set level_nama = ? where level_kode = ?', ['Customer', 'CUS']);
-    //     // return 'Update data berhasil. Jumlah data yang diupdate: ' . $row. ' baris';
+        return view('level.edit_ajax', ['level' => $level]);
+    }
 
-    //     // $row = DB::delete('delete from m_level where level_kode = ?', ['CUS']);
-    //     // return 'Delete data berhasil. Jumlah data yang dihapus: ' . $row. ' baris';
+    // Update data level melalui AJAX
+    public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_kode' => 'required|string|max:10|unique:m_level,level_kode,' . $id . ',level_id',
+                'level_nama' => 'required|string|max:100',
+            ];
 
-    //     $data = DB::select('select * from m_level');
-    //     return view('level', ['data' => $data]);
-    // }
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $level = LevelModel::find($id);
+            if ($level) {
+                $level->update($request->all());
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data level berhasil diupdate.',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan.',
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
 }
