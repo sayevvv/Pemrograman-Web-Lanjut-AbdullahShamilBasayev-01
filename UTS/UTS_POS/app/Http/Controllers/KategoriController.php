@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use DataTables;
 use Illuminate\Http\Request;
 use App\Models\KategoriModel;
 use Illuminate\Support\Facades\DB;
-use DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
@@ -101,5 +102,39 @@ class KategoriController extends Controller
         } catch (\Exception $e) {
             return redirect('/kategori')->with('error', 'Data gagal dihapus: ' . $e->getMessage());
         }
+    }
+    public function create_ajax()
+    {
+        return view('kategori.create_ajax');
+    }
+
+    // Simpan data kategori baru
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_kode' => 'required|string|unique:m_kategori,kategori_kode',
+                'kategori_nama' => 'required|string|max:100',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            KategoriModel::create($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data kategori berhasil disimpan.',
+            ]);
+        }
+
+        return redirect('/');
     }
 }

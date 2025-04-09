@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\LevelModel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class LevelController extends Controller
 {
-    // JOBSHEET 5 TUGAS PRAKTIKUM
     public function index()
     {
         $breadcrumb = (object) ['title' => 'Data Level', 'list' => ['Home', 'Level']];
@@ -108,6 +108,41 @@ class LevelController extends Controller
         } catch (\Exception $e) {
             return redirect('/level')->with('error', 'Data gagal dihapus: ' . $e->getMessage());
         }
+    }
+
+    public function create_ajax()
+    {
+        return view('level.create_ajax');
+    }
+
+    // Menyimpan data level melalui AJAX
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_kode' => 'required|string|max:10|unique:m_level,level_kode',
+                'level_nama' => 'required|string|max:100',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            LevelModel::create($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data level berhasil disimpan.',
+            ]);
+        }
+
+        return redirect('/');
     }
     // public function index()
     // {

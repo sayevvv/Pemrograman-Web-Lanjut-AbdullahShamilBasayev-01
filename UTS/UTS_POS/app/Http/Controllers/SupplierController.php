@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SupplierModel;
 use Illuminate\Http\Request;
+use App\Models\SupplierModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
@@ -145,4 +146,39 @@ class SupplierController extends Controller
             return redirect('/supplier')->with('error', 'Gagal menghapus data supplier karena data masih terhubung dengan tabel lain');
         }
     }
+    public function create_ajax()
+     {
+         return view('supplier.create_ajax');
+     }
+
+     // Simpan data supplier baru
+     public function store_ajax(Request $request)
+     {
+         if ($request->ajax() || $request->wantsJson()) {
+             $rules = [
+                 'supplier_kode'  => 'required|string|max:50|unique:m_supplier,supplier_kode',
+                 'supplier_nama'  => 'required|string|max:100',
+                 'supplier_alamat' => 'nullable|string|max:255',
+             ];
+
+             $validator = Validator::make($request->all(), $rules);
+
+             if ($validator->fails()) {
+                 return response()->json([
+                     'status'   => false,
+                     'message'  => 'Validasi gagal.',
+                     'msgField' => $validator->errors(),
+                 ]);
+             }
+
+             SupplierModel::create($request->all());
+
+             return response()->json([
+                 'status'  => true,
+                 'message' => 'Data supplier berhasil disimpan.',
+             ]);
+         }
+
+         return redirect('/');
+     }
 }

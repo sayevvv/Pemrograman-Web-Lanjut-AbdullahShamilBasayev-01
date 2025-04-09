@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\StokModel;
-use App\Models\BarangModel;
 use App\Models\UserModel;
-use App\Models\SupplierModel;
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
+use App\Models\SupplierModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class StokController extends Controller
 {
@@ -168,5 +169,50 @@ class StokController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect('/stok')->with('error', 'Gagal menghapus data stok karena data masih terhubung dengan tabel lain');
         }
+    }
+    public function create_ajax()
+    {
+        $barang = BarangModel::select('barang_id', 'barang_nama')->get();
+        $user = UserModel::select('user_id', 'nama')->get();
+        $supplier = SupplierModel::select('supplier_id', 'supplier_nama')->get(); // Ambil data supplier
+
+        return view('stok.create_ajax', [
+            'barang' => $barang,
+            'user' => $user,
+            'supplier' => $supplier
+        ]);
+    }
+
+    // Simpan data stok baru
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'barang_id'    => 'required|integer|exists:m_barang,barang_id',
+                'user_id'      => 'required|integer|exists:m_user,user_id',
+                'supplier_id'  => 'required|integer|exists:m_supplier,supplier_id', // Tambahkan validasi supplier
+                'stok_tanggal' => 'required|date',
+                'stok_jumlah'  => 'required|integer|min:1',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            StokModel::create($request->all());
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data stok berhasil disimpan.',
+            ]);
+        }
+
+        return redirect('/');
     }
 }

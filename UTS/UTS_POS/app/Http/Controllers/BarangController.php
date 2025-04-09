@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\BarangModel;
+use Illuminate\Http\Request;
 use App\Models\KategoriModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class BarangController extends Controller
 {
@@ -113,5 +114,44 @@ class BarangController extends Controller
         } catch (\Exception $e) {
             return redirect('/barang')->with('error', 'Data gagal dihapus: ' . $e->getMessage());
         }
+    }
+
+    public function create_ajax()
+    {
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+        return view('barang.create_ajax', ['kategori' => $kategori]);
+    }
+
+    // Simpan data barang baru
+    public function store_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_id'  => 'required|integer|exists:m_kategori,kategori_id',
+                'barang_kode'  => 'required|string|unique:m_barang,barang_kode',
+                'barang_nama'  => 'required|string|max:100',
+                'harga_beli'   => 'required|numeric|min:0',
+                'harga_jual'   => 'required|numeric|min:0',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            BarangModel::create($request->all());
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data barang berhasil disimpan.',
+            ]);
+        }
+
+        return redirect('/');
     }
 }
