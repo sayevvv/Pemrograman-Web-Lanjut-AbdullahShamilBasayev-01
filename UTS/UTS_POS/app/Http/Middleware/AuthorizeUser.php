@@ -13,10 +13,11 @@ class AuthorizeUser
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         $user_role = $request->user()->getRole(); // ambil role user yg login
-        if(in_array($user_role, explode(',', $roles))) { // cek apakah role user ada di dalam array roles
+        // dd($user_role);
+        if(in_array($user_role, $roles)) { // cek apakah role user ada di dalam array roles
             // saya menambahkan explode untuk merubah string menjadi array
             return $next($request); // jika ada, maka lanjutkan request
         }
