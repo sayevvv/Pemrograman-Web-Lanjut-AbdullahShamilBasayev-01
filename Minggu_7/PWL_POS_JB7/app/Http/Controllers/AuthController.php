@@ -85,7 +85,7 @@ class AuthController extends Controller
             'level_id' => $request->level_id,
             'username' => $request->username,
             'nama' => $request->nama,
-            'password' => $request->password, // Tidak perlu melakukan hash karena sudah di-hash otomatis oleh casts pada UserModel
+            'password' => Hash::make($request->password),
         ]);
 
         Auth::login($user);
