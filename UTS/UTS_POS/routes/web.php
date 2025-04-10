@@ -33,6 +33,11 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
 
+    Route::get('/profil', [ProfileController::class, 'profil']);
+    Route::get('/profile/picture/{id}', [ProfileController::class, 'profilePicture'])->name('profile.picture');
+    Route::get('/profile/edit_pfp', [ProfileController::class, 'editPfp'])->name('profile.editPfp');
+    Route::post('/profile/update_pfp', [ProfileController::class, 'updatePfp'])->name('profile.updatePfp');
+
     Route::middleware(['authorize:ADM'])->group(function () {
         Route::group(['prefix' => 'user'], function () {
             Route::get('/', [UserController::class, 'index']);         // menampilkan halaman awal user

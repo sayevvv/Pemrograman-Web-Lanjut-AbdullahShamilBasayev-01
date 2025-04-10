@@ -1,4 +1,16 @@
 <div class="sidebar">
+    <!-- Profile Picture -->
+    <div class="user-panel d-flex flex-column align-items-center text-center mt-3 mb-3">
+        <a href="{{ url('/profil') }}" class="image mb-2 position-relative">
+                <img src="{{ asset('storage/uploads/profile_images/' . (Auth::user()->profile_picture ?? 'default-profile.png')) }}"
+                    class="img-circle elevation-2"
+                    alt="User Image"
+                    style="width: 50px; height: 50px; object-fit: cover; border: 2px solid white;">
+        </a>
+        <div class="info">
+            <span style="color:white">{{ Auth::user()->nama }}</span>
+        </div>
+    </div>
     <!-- SidebarSearch Form -->
     <div class="form-inline mt-2">
         <div class="input-group" data-widget="sidebar-search">
@@ -56,6 +68,12 @@
                 <a href="{{ url('/stok') }}" class="nav-link {{ $activeMenu == 'stok' ? 'active' : '' }} ">
                     <i class="nav-icon fas fa-cubes"></i>
                     <p>Stok Barang</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/profil') }}" class="nav-link {{ $activeMenu == 'profil' ? 'active' : '' }} ">
+                    <i class="nav-icon fas fa-user-circle"></i>
+                    <p>Profil</p>
                 </a>
             </li>
             <li class="nav-item">
