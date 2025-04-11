@@ -24,6 +24,8 @@ use App\Http\Controllers\SupplierController;
 
 Route::pattern('id', '[0-9]+');
 
+Route::get('/', [WelcomeController::class, 'index'])->name('home'); // landing page
+
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postRegister']);
 
@@ -32,7 +34,7 @@ Route::post('login', [AuthController::class, 'postlogin']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [WelcomeController::class, 'index']);
+    Route::get('/dashboard', [WelcomeController::class, 'dashboard']);
 
     Route::get('/profil', [ProfileController::class, 'profil']);
     Route::get('/profile/picture/{id}', [ProfileController::class, 'profilePicture'])->name('profile.picture');

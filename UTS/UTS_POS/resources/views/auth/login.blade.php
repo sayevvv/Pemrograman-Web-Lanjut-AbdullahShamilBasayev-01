@@ -69,6 +69,7 @@
             <!-- /.card-body -->
         </div>
         <!-- /.card -->
+        <a href="{{ route('home') }}" class="mt-2">Kembali ke home</a>
     </div>
 
     <!-- /.login-box -->
