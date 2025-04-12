@@ -84,6 +84,7 @@
                 </form>
             </div>
         </div>
+        <a href="{{ route('home') }}" class="mt-3">Kembali ke home</a>
     </div>
 <!-- /.login-box -->
     <!-- jQuery -->
