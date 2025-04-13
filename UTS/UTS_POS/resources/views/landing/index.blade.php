@@ -28,19 +28,19 @@
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        .bg-primary {
+        .bg-dark {
             background-color: #005D56 !important;
         }
 
-        .btn-outline-primary {
+        .btn-outline-dark {
             color: #005D56;
             border-color: #005D56;
             background-color: #fff;
             /* White background */
         }
 
-        .btn-outline-primary:hover,
-        .btn-outline-primary:focus {
+        .btn-outline-dark:hover,
+        .btn-outline-dark:focus {
             background-color: #005D56;
             color: #fff;
             border-color: #005D56;
@@ -173,9 +173,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#testimonials">Testimonials</a>
                     </li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-primary rounded-pill px-4" href="{{ url('register') }}">Join Us</a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -186,23 +183,25 @@
             <!-- Left Side with fade-in animation -->
             <div class="d-flex flex-column align-items-start animate-fade-in">
                 <p class="subtitle">Streamline Your Sales With</p>
-                <img src="{{ asset('images/SalesPoint.svg') }}" alt="SalesPoint Logo" style="height: 70px;"
-                    class="logo-pulse">
+                <img src="{{ asset('images/SalesPoint.svg') }}" alt="SalesPoint Logo" style="height: 100px; margin-top: 24px;" class="logo-pulse">
             </div>
 
             <!-- Right Side with slide-in animation -->
-            <div class="text-start animate-slide-in" style="max-width: 50%;">
-                <p>
-                    The modern point of sales <br> solution designed to help businesses of all sizes <br> manage
-                    transactions efficiently <br> and grow revenue.
+            <div class="text-start animate-slide-in d-flex flex-column align-items-start" style="max-width: 50%;">
+                <p class="small text-start">
+                    The modern point of sales solution<br>
+                    designed to help businesses of all sizes <br>
+                    manage transactions efficiently <br>
+                    and grow revenue.
                 </p>
+                <a href="/login" class="btn btn-outline-dark rounded-pill px-5 py-2 mt-3">Join Now</a>
             </div>
         </div>
+
         <div class="mx-auto overflow-hidden px-5 mt-4 position-relative parallax-container" style="max-height: 500px">
             <img src="{{ asset('images/landingimage.jpg') }}" alt="" class="img-fluid rounded parallax-bg">
         </div>
     </section>
-
 
     <!-- Features Section -->
     <section id="features" class="py-5 py-md-7">
@@ -219,7 +218,7 @@
                 <div class="col-md-6 col-lg-3 animate-zoom-in" style="animation-delay: 0.1s;">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="feature-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle mb-3 mx-auto"
+                            <div class="feature-icon bg-dark bg-opacity-10 text-dark p-3 rounded-circle mb-3 mx-auto"
                                 style="width: 70px; height: 70px;">
                                 <i class="bi bi-cart-check fs-4"></i>
                             </div>
@@ -233,7 +232,7 @@
                 <div class="col-md-6 col-lg-3 animate-zoom-in" style="animation-delay: 0.3s;">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="feature-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle mb-3 mx-auto"
+                            <div class="feature-icon bg-dark bg-opacity-10 text-dark p-3 rounded-circle mb-3 mx-auto"
                                 style="width: 70px; height: 70px;">
                                 <i class="bi bi-graph-up fs-4"></i>
                             </div>
@@ -247,7 +246,7 @@
                 <div class="col-md-6 col-lg-3 animate-zoom-in" style="animation-delay: 0.5s;">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="feature-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle mb-3 mx-auto"
+                            <div class="feature-icon bg-dark bg-opacity-10 text-dark p-3 rounded-circle mb-3 mx-auto"
                                 style="width: 70px; height: 70px;">
                                 <i class="bi bi-people fs-4"></i>
                             </div>
@@ -261,7 +260,7 @@
                 <div class="col-md-6 col-lg-3 animate-zoom-in" style="animation-delay: 0.7s;">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="feature-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle mb-3 mx-auto"
+                            <div class="feature-icon bg-dark bg-opacity-10 text-dark p-3 rounded-circle mb-3 mx-auto"
                                 style="width: 70px; height: 70px;">
                                 <i class="bi bi-box-seam fs-4"></i>
                             </div>
@@ -291,7 +290,7 @@
                         <div class="col-md-4">
                             <div class="card border-0 bg-white shadow-sm h-100">
                                 <div class="card-body p-4 text-center">
-                                    <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                                    <div class="step-number bg-dark text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
                                         style="width: 50px; height: 50px;">
                                         <span class="fw-bold">1</span>
                                     </div>
@@ -305,7 +304,7 @@
                         <div class="col-md-4">
                             <div class="card border-0 bg-white shadow-sm h-100">
                                 <div class="card-body p-4 text-center">
-                                    <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                                    <div class="step-number bg-dark text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
                                         style="width: 50px; height: 50px;">
                                         <span class="fw-bold">2</span>
                                     </div>
@@ -319,7 +318,7 @@
                         <div class="col-md-4">
                             <div class="card border-0 bg-white shadow-sm h-100">
                                 <div class="card-body p-4 text-center">
-                                    <div class="step-number bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+                                    <div class="step-number bg-dark text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
                                         style="width: 50px; height: 50px;">
                                         <span class="fw-bold">3</span>
                                     </div>
@@ -359,7 +358,7 @@
                             <p class="card-text mb-3">"SalesPoint transformed our retail operations. We've increased
                                 efficiency by 40% and our staff loves how easy it is to use."</p>
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-primary bg-opacity-10 me-3"
+                                <div class="rounded-circle bg-dark bg-opacity-10 me-3"
                                     style="width: 50px; height: 50px;"></div>
                                 <div>
                                     <h6 class="mb-0 fw-bold">Sarah Johnson</h6>
@@ -383,7 +382,7 @@
                             <p class="card-text mb-3">"The inventory management features alone are worth the
                                 investment. We've reduced stockouts by 75% since implementing SalesPoint."</p>
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-primary bg-opacity-10 me-3"
+                                <div class="rounded-circle bg-dark bg-opacity-10 me-3"
                                     style="width: 50px; height: 50px;"></div>
                                 <div>
                                     <h6 class="mb-0 fw-bold">Michael Chen</h6>
@@ -407,7 +406,7 @@
                             <p class="card-text mb-3">"Customer support is exceptional. Any time we've had questions,
                                 the team has been responsive and helpful. Highly recommend!"</p>
                             <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-primary bg-opacity-10 me-3"
+                                <div class="rounded-circle bg-dark bg-opacity-10 me-3"
                                     style="width: 50px; height: 50px;"></div>
                                 <div>
                                     <h6 class="mb-0 fw-bold">Jessica Martinez</h6>
@@ -450,7 +449,7 @@
     </section>
 
     <!-- Final CTA Section -->
-    <section class="py-5 py-md-7 bg-primary text-white">
+    <section class="py-5 py-md-7 bg-dark text-white">
         <div class="container">
             <div class="row justify-content-center text-center">
                 <div class="col-lg-8">
@@ -459,7 +458,7 @@
                         needs.</p>
                     <div class="d-flex flex-wrap justify-content-center gap-3">
                         <a href="#"
-                            class="btn btn-outline-primary btn-lg rounded-pill px-4 fw-bold text-primary">Start
+                            class="btn btn-outline-dark btn-lg rounded-pill px-4 fw-bold text-dark">Start
                             Your Free Trial</a>
                     </div>
                     <p class="mt-4 small">No credit card required. 14-day free trial.</p>
@@ -469,7 +468,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-5 bg-dark text-white">
+    <footer class="py-5 text-white" style="background-color: black;">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 mb-4 mb-lg-0">
@@ -547,7 +546,7 @@
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <p class="small text-white-50">Made with ❤️ for businesses worldwide</p>
+                    <p class="small text-white-50">Abdullah Shamil Basayev | TI 2D | 2341720166</p>
                 </div>
             </div>
         </div>
@@ -557,20 +556,20 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-</body>
-<script>
-    // Parallax effect on scroll
-    document.addEventListener('DOMContentLoaded', function() {
-        const parallaxBg = document.querySelector('.parallax-bg');
+    <script>
+        // Parallax effect on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const parallaxBg = document.querySelector('.parallax-bg');
 
-        window.addEventListener('scroll', function() {
-            const scrollPosition = window.pageYOffset;
-            if (parallaxBg) {
-                // Move the background image at a slower rate than the scroll
-                parallaxBg.style.transform = 'translateY(' + scrollPosition * 0.3 + 'px)';
-            }
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.pageYOffset;
+                if (parallaxBg) {
+                    // Move the background image at a slower rate than the scroll
+                    parallaxBg.style.transform = 'translateY(' + scrollPosition * 0.3 + 'px)';
+                }
+            });
         });
-    });
-</script>
+    </script>
+</body>
 
 </html>
