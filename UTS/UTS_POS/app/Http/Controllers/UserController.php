@@ -12,7 +12,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
-{ 
+{
     // Menampilkan halaman awal user
     public function index()
     {
@@ -272,6 +272,12 @@ class UserController extends Controller
     }
         // Jika bukan request AJAX, redirect ke halaman utama
         return redirect('/');
+    }
+    public function show_ajax(string $id)
+    {
+        $user = UserModel::with('level')->find($id);
+
+        return view('user.show_ajax', ['user' => $user]);
     }
     public function confirm_ajax(string $id){
         $user = UserModel::find($id);

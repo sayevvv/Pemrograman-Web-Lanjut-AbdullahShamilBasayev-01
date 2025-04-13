@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [UserController::class, 'store_ajax']);   // menyimpan data user baru dengan ajax
             Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']); // menampilkan halaman form edit user dengan ajax
             Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']);   // menyimpan perubahan data user dengan ajax
+            Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']); // menampilkan detail user dengan ajax
             Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']); // Tampilan form confirm delete user
             Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // Menghapus data user dengan ajax
             Route::get('/{id}', [UserController::class, 'show']);      // menampilkan detail user
@@ -74,6 +75,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [KategoriController::class, 'store_ajax']);
             Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
             Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
             Route::get('/{id}', [KategoriController::class, 'show']);      // menampilkan detail kategori
@@ -97,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [LevelController::class, 'store_ajax']);
             Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
             Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
             Route::get('/{id}', [LevelController::class, 'show']);      // menampilkan detail level
@@ -120,6 +123,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [BarangController::class, 'store_ajax']);
             Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
             Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [BarangController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
             Route::get('/{id}', [BarangController::class, 'show']);      // menampilkan detail barang
@@ -143,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [StokController::class, 'store_ajax']);
             Route::get('/{id}/edit_ajax', [StokController::class, 'edit_ajax']);
             Route::put('/{id}/update_ajax', [StokController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [StokController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [StokController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
             Route::get('/{id}', [StokController::class, 'show']);       // menampilkan detail stok
@@ -166,6 +171,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/ajax', [SupplierController::class, 'store_ajax']);
             Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
             Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [SupplierController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
             Route::get('/{id}', [SupplierController::class, 'show']);      // Menampilkan detail supplier

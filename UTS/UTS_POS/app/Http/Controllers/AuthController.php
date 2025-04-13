@@ -15,7 +15,7 @@ class AuthController extends Controller
     {
         // Jika sudah login, maka redirect ke halaman home
         if (Auth::check()) {
-            return redirect('/');
+            return redirect('/dashboard');
         }
 
         return view('auth.login');
@@ -90,8 +90,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Registrasi Berhasil',
-            'redirect' => url('/')
+            'redirect' => url('/dashboard')
         ]);
     }
 }
- 
