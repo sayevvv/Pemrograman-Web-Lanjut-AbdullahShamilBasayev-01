@@ -71,6 +71,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ url('/penjualan') }}" class="nav-link {{ $activeMenu == 'penjualan' ? 'active' : '' }} ">
+                    <i class="nav-icon fas fa-cubes"></i>
+                    <p>Penjualan</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('/profil') }}" class="nav-link {{ $activeMenu == 'profil' ? 'active' : '' }} ">
                     <i class="nav-icon fas fa-user-circle"></i>
                     <p>Profil</p>
