@@ -26,7 +26,7 @@ use App\Http\Controllers\PenjualanDetailController;
 
 Route::pattern('id', '[0-9]+');
 
-Route::get('/', [WelcomeController::class, 'index'])->name('home'); // landing page
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postRegister']);
@@ -37,6 +37,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [WelcomeController::class, 'dashboard']);
+    // Route::post('/dashboard/list', [WelcomeController::class, 'list']);     // menampilkan data user dalam bentuk json untuk datatables
 
     Route::get('/profil', [ProfileController::class, 'profil']);
     Route::get('/profile/picture/{id}', [ProfileController::class, 'profilePicture'])->name('profile.picture');

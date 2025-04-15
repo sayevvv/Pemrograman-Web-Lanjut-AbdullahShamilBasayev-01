@@ -29,6 +29,7 @@
                         <th>Pembeli</th>
                         <th>Tanggal</th>
                         <th>User</th>
+                        <th>Invoice</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -93,6 +94,12 @@
                         className: "",
                         orderable: true,
                         searchable: true
+                    },
+                    {
+                        data: "total_harga", // <- tambahkan ini
+                        className: "text-end", // opsional untuk rata kanan
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: "aksi",

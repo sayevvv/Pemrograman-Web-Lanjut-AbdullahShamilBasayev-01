@@ -30,6 +30,7 @@
                         <th>Total Bayar</th>
                         <td>{{ number_format($penjualan->total_bayar, 0, ',', '.') }}</td>
                     </tr>
+
                 </table>
 
                 @if ($penjualan->detailPenjualan->count())

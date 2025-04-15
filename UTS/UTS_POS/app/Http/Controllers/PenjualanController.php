@@ -24,13 +24,19 @@ class PenjualanController extends Controller
 
     public function list()
     {
-        $penjualan = PenjualanModel::with('user')->select('penjualan_id', 'user_id', 'pembeli', 'penjualan_kode', 'penjualan_tanggal');
+        $penjualan = PenjualanModel::with(['user', 'detailPenjualan'])
+            ->select('penjualan_id', 'user_id', 'pembeli', 'penjualan_kode', 'penjualan_tanggal');
 
         return DataTables::of($penjualan)
-            ->addIndexColumn()
-            ->addColumn('user_nama', function ($penjualan) {
-                return $penjualan->user->nama ?? '-';
-            })
+        ->addIndexColumn()
+        ->addColumn('user_nama', function ($penjualan) {
+            return $penjualan->user->nama ?? '-';
+        })
+        ->addColumn('total_harga', function ($penjualan) {
+            return 'Rp ' . number_format($penjualan->detailPenjualan->sum(function ($detail) {
+                return $detail->harga * $detail->jumlah;
+            }), 0, ',', '.');
+        })
             ->addColumn('aksi', function ($penjualan) {
                 $btn  = '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualan->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualan->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
@@ -199,7 +205,9 @@ class PenjualanController extends Controller
 
     public function show_ajax(string $id)
     {
-        $penjualan = PenjualanModel::with('user')->find($id);
+        $penjualan = PenjualanModel::with(['user', 'detailPenjualan'])->find($id);
+        $penjualan->total_bayar = $penjualan->detailPenjualan->sum(fn($d) => $d->harga * $d->jumlah);
+
         return view('penjualan.show_ajax', ['penjualan' => $penjualan]);
     }
 

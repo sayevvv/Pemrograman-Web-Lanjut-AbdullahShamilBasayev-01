@@ -37,7 +37,7 @@
 @endsection
 
 @section('bottom-link')
-    <a href="{{ route('home') }}" class="mt-3 d-block text-center text-decoration-none">Kembali ke home</a>
+    {{-- <a href="{{ route('home') }}" class="mt-3 d-block text-center text-decoration-none">Kembali ke home</a> --}}
 @endsection
 
 @section('scripts')

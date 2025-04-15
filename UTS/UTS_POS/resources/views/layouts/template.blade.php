@@ -11,6 +11,8 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     {{-- Data Tables --}}
@@ -21,6 +23,13 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+    </style>
     @stack('css')
 </head>
 
@@ -34,10 +43,8 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ url('/') }}" class="brand-link">
-                <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">PWL - Starter Code</span>
+            <a href="{{ url('/') }}" class="brand-link d-flex justify-content-center">
+                <img src="{{ asset('images/SalesPointWhite.svg') }}" alt="AdminLTE Logo" class="brand-image img-fluid h-50 w-50" style="object-fit: cover;">
             </a>
 
             <!-- Sidebar -->

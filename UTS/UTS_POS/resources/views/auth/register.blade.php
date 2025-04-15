@@ -60,7 +60,7 @@
 @endsection
 
 @section('bottom-link')
-<a href="{{ route('home') }}" class="link-text text-decoration-none">Kembali ke home</a>
+{{-- <a href="{{ route('home') }}" class="link-text text-decoration-none">Kembali ke home</a> --}}
 @endsection
 
 @section('scripts')
