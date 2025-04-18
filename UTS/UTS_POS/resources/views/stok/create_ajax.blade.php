@@ -17,11 +17,13 @@
                     </select>
                     <small id="error-barang_id" class="error-text form-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
                     <label>Jumlah</label>
                     <input type="number" name="stok_jumlah" id="stok_jumlah" class="form-control" required>
                     <small id="error-stok_jumlah" class="error-text form-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
                     <label>User</label>
                     <select name="user_id" id="user_id" class="form-control" required>
@@ -32,6 +34,18 @@
                     </select>
                     <small id="error-user_id" class="error-text form-text text-danger"></small>
                 </div>
+
+                <div class="form-group">
+                    <label>Supplier</label>
+                    <select name="supplier_id" id="supplier_id" class="form-control" required>
+                        <option value="">- Pilih Supplier -</option>
+                        @foreach ($supplier as $s)
+                            <option value="{{ $s->supplier_id }}">{{ $s->supplier_nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-supplier_id" class="error-text form-text text-danger"></small>
+                </div>
+
                 <div class="form-group">
                     <label>Tanggal Stok</label>
                     <input type="date" name="stok_tanggal" id="stok_tanggal" class="form-control" required>
@@ -45,19 +59,15 @@
         </div>
     </div>
 </form>
+
 <script>
     $("#form-tambah").validate({
         rules: {
             barang_id: { required: true },
-            stok_tanggal: {
-            required: true,
-            date: true
-            },
-            user_id: {
-            required: true,
-            digits: true
-            },
-            stok_jumlah: { required: true, number: true, min: 1 }
+            stok_jumlah: { required: true, number: true, min: 1 },
+            user_id: { required: true, digits: true },
+            supplier_id: { required: true, digits: true },
+            stok_tanggal: { required: true, date: true }
         },
         submitHandler: function(form) {
             $.ajax({

@@ -4,10 +4,13 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a href="{{ url('/barang/export_excel') }}" class="btn btn-primary"><i class="fa fa-fileexcel"></i> Export Barang</a>
-                <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-filepdf"></i> Export Barang (PDF)</a>
+                <a href="{{ url('/barang/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export
+                    Barang</a>
+                <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Barang
+                    (PDF)</a>
                 <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-info">Import Barang</button>
-                <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+                <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-success">Tambah
+                    Barang</button>
             </div>
         </div>
         <div class="card-body">
@@ -20,6 +23,24 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
+            {{-- Filtering --}}
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-1 control-label col-form-label">Filter:</label>
+                        <div class="col-3">
+                            <select class="form-control" id="filter_kategori">
+                                <option value="">- Semua -</option>
+                                @foreach ($kategori as $item)
+                                    <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Kategori Barang</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <table class="table table-bordered table-striped table-hover table-sm" id="table_barang">
                 <thead>
@@ -37,7 +58,7 @@
         </div>
     </div>
     <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
-    data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -61,11 +82,10 @@
                     type: "POST",
                     dataType: "json",
                     data: function(d) {
-                        // tidak ada filter tambahan
+                        d.kategori_id = $('#filter_kategori').val();
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: "DT_RowIndex",
                         className: "text-center",
                         orderable: false,
@@ -109,6 +129,9 @@
                     }
                 ]
             });
+        });
+        $('#filter_kategori').on('change', function() {
+            dataBarang.ajax.reload();
         });
     </script>
 @endpush

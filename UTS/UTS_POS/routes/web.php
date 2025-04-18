@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/picture/{id}', [ProfileController::class, 'profilePicture'])->name('profile.picture');
     Route::get('/profile/edit_pfp', [ProfileController::class, 'editPfp'])->name('profile.editPfp');
     Route::post('/profile/update_pfp', [ProfileController::class, 'updatePfp'])->name('profile.updatePfp');
+    Route::delete('/profile/delete_pfp', [ProfileController::class, 'deletePfp'])->name('profile.deletePfp');
+
 
     Route::middleware(['authorize:ADM'])->group(function () {
         Route::group(['prefix' => 'user'], function () {
@@ -68,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::middleware(['authorize:ADM'])->group(function () {
+    Route::middleware(['authorize:ADM,MNG'])->group(function () {
         Route::group(['prefix' => 'kategori'], function () {
             Route::get('/', [KategoriController::class, 'index']);         // menampilkan halaman awal kategori
             Route::post('/list', [KategoriController::class, 'list']);     // menampilkan data kategori dalam bentuk json untuk datatables
@@ -140,7 +142,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::middleware(['authorize:ADM,MNG,KSR'])->group(function () {
         Route::group(['prefix' => 'stok'], function () {
             Route::get('/', [StokController::class, 'index']);          // menampilkan halaman awal stok
             Route::post('/list', [StokController::class, 'list']);      // menampilkan data stok dalam bentuk json untuk datatables
@@ -162,9 +163,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [StokController::class, 'export_excel']); // export excel
             Route::get('/export_pdf', [StokController::class, 'export_pdf']); // export pdf
         });
-    });
 
-    Route::middleware(['authorize:ADM,MNG,KSR'])->group(function () {
         Route::group(['prefix' => 'supplier'], function () {
             Route::get('/', [SupplierController::class, 'index']);         // Menampilkan halaman awal supplier
             Route::post('/list', [SupplierController::class, 'list']);     // Menampilkan data supplier dalam bentuk JSON untuk datatables
@@ -186,9 +185,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [SupplierController::class, 'export_excel']); // export excel
             Route::get('/export_pdf', [SupplierController::class, 'export_pdf']); // export pdf
         });
-    });
 
-    Route::middleware(['authorize:ADM,MNG,KSR'])->group(function () {
         Route::group(['prefix' => 'penjualan'], function () {
             Route::get('/', [PenjualanController::class, 'index']);         // Menampilkan halaman awal supplier
             Route::post('/list', [PenjualanController::class, 'list']);     // Menampilkan data supplier dalam bentuk JSON untuk datatables
@@ -201,6 +198,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/show_ajax', [PenjualanController::class, 'show_ajax']);
             Route::get('/{id}/delete_ajax', [PenjualanController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']);
+            Route::get('/chart-data', [PenjualanController::class, 'chartData']);
             Route::get('/{id}', [PenjualanController::class, 'show']);      // Menampilkan detail supplier
             Route::get('/{id}/edit', [PenjualanController::class, 'edit']); // Menampilkan halaman form edit supplier
             Route::put('/{id}', [PenjualanController::class, 'update']);    // Menyimpan perubahan data supplier
@@ -210,8 +208,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [PenjualanController::class, 'export_excel']); // export excel
             Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']); // export pdf
         });
-    });
-    Route::middleware(['authorize:ADM,MNG,KSR'])->group(function () {
+
         Route::group(['prefix' => 'penjualan_detail'], function () {
             Route::get('/', [PenjualanDetailController::class, 'index']);         // Menampilkan halaman awal supplier
             Route::post('/list', [PenjualanDetailController::class, 'list']);     // Menampilkan data supplier dalam bentuk JSON untuk datatables
@@ -233,7 +230,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [PenjualanDetailController::class, 'export_excel']); // export excel
             Route::get('/export_pdf', [PenjualanDetailController::class, 'export_pdf']); // export pdf
         });
-    });
 });
 
 

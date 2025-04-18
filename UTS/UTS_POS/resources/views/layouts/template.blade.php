@@ -30,6 +30,7 @@
         }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @stack('css')
 </head>
 
@@ -41,10 +42,10 @@
         {{-- navbar --}}
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-light-primary border-right position-fixed">
             <!-- Brand Logo -->
             <a href="{{ url('/') }}" class="brand-link d-flex justify-content-center">
-                <img src="{{ asset('images/SalesPointWhite.svg') }}" alt="AdminLTE Logo" class="brand-image img-fluid h-50 w-50" style="object-fit: cover;">
+                <img src="{{ asset('images/SalesPoint.svg') }}" alt="AdminLTE Logo" class="brand-image img-fluid h-50 w-50" style="object-fit: cover;">
             </a>
 
             <!-- Sidebar -->
@@ -101,6 +102,27 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+        // Logout confirmation modal
+        $(document).ready(function() {
+            $('#logout-btn').on('click', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Konfirmasi Logout',
+                    text: "Apakah Anda yakin ingin keluar dari sistem?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Logout',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('logout-form').submit();
+                    }
+                });
+            });
         });
     </script>
     @stack('js')

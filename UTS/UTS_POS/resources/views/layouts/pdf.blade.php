@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/libre-baskerville/1.0.1/css/libre-baskerville.min.css">
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
             margin: 6px 20px 5px 20px;
             line-height: 15px;
+        }
+
+        .sales-title {
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 18pt;
         }
 
         table {
@@ -63,6 +69,10 @@
             font-size: 13pt;
         }
 
+        .font-bold {
+            font-weight: bold;
+        }
+
         .border-bottom-header {
             border-bottom: 1px solid;
         }
@@ -76,22 +86,24 @@
 </head>
 
 <body>
-    <table class="border-bottom-header">
-        <tr>
-            <td width="15%" class="text-center">
-                <img class="image" src="{{ asset('polinema-bw.png') }}">
-            </td>
-            <td width="85%">
-                <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
-                <span class="text-center d-block font-13 font-bold mb-1">POLITEKNIK NEGERI MALANG</span>
-                <span class="text-center d-block font-10">Jl. Soekarno-Hatta No. 9 Malang 65141</span>
-                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-105, 0341-404420, Fax. (0341) 404420</span>
-                <span class="text-center d-block font-10">Laman: www.polinema.ac.id</span>
-            </td>
-        </tr>
-    </table>
+    <table class="border-bottom-header" style="width: 100%;">
+    <tr>
+        <td style="width: 50%; vertical-align: bottom;">
+            <span class="sales-title">SalesPoint</span>
+        </td>
+        <td style="width: 50%; text-align: right; vertical-align: bottom;">
+            <span class="font-10">Abdullah Shamil Basayev | TI 2D | 2341720166</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: right;">
+            <span class="font-10">Laman: www.SalesPoint.ac.id</span>
+        </td>
+    </tr>
+</table>
 
-    @yield('content')
+    <div>
+        @yield('content')
+    </div>
 </body>
-
 </html>
