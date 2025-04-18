@@ -292,10 +292,9 @@ class SupplierController extends Controller
                  foreach ($data as $baris => $value) {
                      if ($baris > 1) { // Baris ke-1 adalah header, maka lewati
                          $insert[] = [
-                             'supplier_id' => $value['A'],
-                             'supplier_kode' => $value['B'],
-                             'supplier_nama' => $value['C'],
-                             'supplier_alamat' => $value['D'],
+                             'supplier_kode' => $value['A'],
+                             'supplier_nama' => $value['B'],
+                             'supplier_alamat' => $value['C'],
                              'created_at'  => now(),
                          ];
                      }

@@ -18,13 +18,22 @@ class BarangController extends Controller
         $breadcrumb = (object) ['title' => 'Data Barang', 'list' => ['Home', 'Barang']];
         $page = (object) ['title' => 'Daftar Barang'];
         $activeMenu = 'barang';
+        $kategori = KategoriModel::all(); // ambil semua kategori
 
-        return view('barang.index', compact('breadcrumb', 'page', 'activeMenu'));
+        return view('barang.index', compact('breadcrumb', 'page', 'activeMenu', 'kategori'));
     }
 
     public function list()
     {
-        $barang = BarangModel::with('kategori')->select('barang_id', 'kategori_id', 'barang_kode', 'barang_nama', 'harga_beli', 'harga_jual');
+        $kategoriId = request('kategori_id'); // Ambil filter dari request
+
+        $barang = BarangModel::with('kategori')
+            ->select('barang_id', 'kategori_id', 'barang_kode', 'barang_nama', 'harga_beli', 'harga_jual');
+
+        // Filter jika kategori dipilih
+        if ($kategoriId) {
+            $barang->where('kategori_id', $kategoriId);
+        }
 
         return DataTables::of($barang)
             ->addIndexColumn()
@@ -32,22 +41,15 @@ class BarangController extends Controller
                 return $barang->kategori->kategori_nama ?? '-';
             })
             ->addColumn('aksi', function ($barang) {
-                // $btn  = '<a href="' . url('/barang/' . $barang->barang_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                // $btn .= '<a href="' . url('/barang/' . $barang->barang_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                // $btn .= '<form class="d-inline-block" method="POST" action="' . url('/barang/' . $barang->barang_id) . '">'
-                //       . csrf_field()
-                //       . method_field('DELETE')
-                //       . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus?\')">Hapus</button>'
-                //       . '</form>';
-                // return $btn;
                 $btn  = '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                    $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                    $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
-                    return $btn;
+                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+                return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
     }
+
 
 
     public function create()

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserModel;
 use App\Models\LevelModel;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -263,9 +264,8 @@ class LevelController extends Controller
                 foreach ($data as $baris => $value) {
                     if ($baris > 1) { // Baris ke-1 adalah header, maka lewati
                         $insert[] = [
-                            'level_id' => $value['A'],
-                            'level_kode' => $value['B'],
-                            'level_nama' => $value['C'],
+                            'level_kode' => $value['A'],
+                            'level_nama' => $value['B'],
                             'created_at'  => now(),
                         ];
                     }
@@ -273,7 +273,7 @@ class LevelController extends Controller
 
                 if (count($insert) > 0) {
                     // Insert data ke database, jika data sudah ada, maka diabaikan
-                    UserModel::insertOrIgnore($insert);
+                    LevelModel::insertOrIgnore($insert);
                 }
 
                 return response()->json([

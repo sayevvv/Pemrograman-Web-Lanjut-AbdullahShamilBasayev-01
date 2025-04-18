@@ -16,7 +16,6 @@ class WelcomeController extends Controller
             return redirect('/dashboard'); // or wherever your main page is
         }
         return view('auth.login'); // login page
-        // return view('landing.index'); // landing page
     }
     public function dashboard() {
         $user = Auth::user();

@@ -341,11 +341,10 @@ class StokController extends Controller
                  foreach ($data as $baris => $value) {
                      if ($baris > 1) { // Baris ke-1 adalah header, maka lewati
                          $insert[] = [
-                             'stok_id' => $value['A'],
-                             'barang_id' => $value['B'],
-                             'supplier_id' => $value['C'],
-                             'stok_tanggal' => $value['D'],
-                             'stok_jumlah' => $value['E'],
+                             'barang_id' => $value['A'],
+                             'supplier_id' => $value['B'],
+                             'stok_tanggal' => $value['C'],
+                             'stok_jumlah' => $value['D'],
                              'created_at'  => now(),
                          ];
                      }

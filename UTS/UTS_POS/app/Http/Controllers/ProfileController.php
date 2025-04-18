@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -35,16 +36,43 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        // Simpan file baru
+        // Hapus foto lama jika bukan default
+        if ($user->profile_picture && $user->profile_picture !== 'default-profile.png') {
+            Storage::delete('public/uploads/profile_images/' . $user->profile_picture);
+        }
+
         if ($request->hasFile('profile_picture')) {
             $filename = 'pfp_' . $user->user_id . '.' . $request->file('profile_picture')->getClientOriginalExtension();
-            $path = $request->file('profile_picture')->storeAs('public/uploads/profile_images', $filename);
+            $request->file('profile_picture')->storeAs('public/uploads/profile_images', $filename);
 
-            // Simpan path ke database (jika kamu simpan path-nya)
             $user->profile_picture = $filename;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Foto profil berhasil diperbarui.',
+                'new_profile_picture_url' => asset('storage/uploads/profile_images/' . $filename)
+            ]);
+        }
+
+        return response()->json(['message' => 'Tidak ada foto yang dipilih.'], 400);
+    }
+
+    public function deletePfp(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->profile_picture && $user->profile_picture !== 'default-profile.png') {
+            Storage::delete('public/uploads/profile_images/' . $user->profile_picture);
+            $user->profile_picture = 'default-profile.png';
             $user->save();
         }
 
-        return redirect()->back()->with('success', 'Foto profil berhasil diperbarui.');
+        return response()->json([
+            'message' => 'Foto profil berhasil dihapus.',
+            'new_profile_picture_url' => asset('storage/uploads/profile_images/default-profile.png')
+        ]);
     }
+
+
+
 }

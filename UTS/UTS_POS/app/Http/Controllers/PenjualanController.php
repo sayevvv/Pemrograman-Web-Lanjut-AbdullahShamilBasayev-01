@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use App\Models\StokModel;
 use App\Models\UserModel;
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\PenjualanModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Models\PenjualanDetailModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -119,39 +123,124 @@ class PenjualanController extends Controller
 
     public function create_ajax()
     {
-        $users = UserModel::select('user_id', 'nama')->get();
-        return view('penjualan.create_ajax', ['users' => $users]);
-    }
+    $users = UserModel::select('user_id', 'nama')->get();
+
+    $barangs = BarangModel::select('m_barang.barang_id', 'm_barang.barang_nama', 'm_barang.harga_jual')
+        ->join('t_stok', 't_stok.barang_id', '=', 'm_barang.barang_id')
+        ->selectRaw('SUM(t_stok.stok_jumlah) as total_stok')
+        ->groupBy('m_barang.barang_id', 'm_barang.barang_nama', 'm_barang.harga_jual')
+        ->having('total_stok', '>', 0)
+        ->get();
+
+    return view('penjualan.create_ajax', [
+        'users' => $users,
+        'barangs' => $barangs,
+    ]);
+}
+
+
 
     public function store_ajax(Request $request)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'pembeli'           => 'required|string|max:50',
-                'penjualan_kode'    => 'required|string|max:20|unique:t_penjualan,penjualan_kode',
-                'penjualan_tanggal' => 'required|date',
-            ];
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'pembeli'           => 'required|string|max:50',
+            'penjualan_kode'    => 'required|string|max:20|unique:t_penjualan,penjualan_kode',
+            'penjualan_tanggal' => 'required|date',
+            'barang_id.*'       => 'required|exists:m_barang,barang_id',
+            'harga.*'           => 'required|numeric|min:0',
+            'jumlah.*'          => 'required|integer|min:1',
+        ];
 
-            $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => false,
-                    'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors(),
+        if ($validator->fails()) {
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Validasi gagal.',
+                'msgField' => $validator->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Simpan data penjualan utama
+            $penjualan = PenjualanModel::create([
+                'user_id'           => auth()->user()->user_id,
+                'pembeli'           => $request->pembeli,
+                'penjualan_kode'    => $request->penjualan_kode,
+                'penjualan_tanggal' => $request->penjualan_tanggal,
+            ]);
+
+            // Loop dan simpan detail penjualan
+            foreach ($request->barang_id as $index => $barangId) {
+                $barang = BarangModel::findOrFail($barangId);
+
+                $harga  = $request->harga[$index];
+                $jumlah = $request->jumlah[$index];
+
+                // Simpan ke detail penjualan
+                PenjualanDetailModel::create([
+                    'penjualan_id' => $penjualan->penjualan_id,
+                    'barang_id'    => $barangId,
+                    'harga'        => $harga,
+                    'jumlah'       => $jumlah,
                 ]);
+
+                // Kurangi stok barang
+                $stokTersedia = StokModel::where('barang_id', $barangId)->sum('stok_jumlah');
+
+                if ($stokTersedia < $jumlah) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'  => false,
+                        'message' => "Stok barang '{$barang->barang_nama}' tidak mencukupi.",
+                    ]);
+                }
+
+                // Kurangi stok secara total
+                $stok = StokModel::where('barang_id', $barangId)->orderBy('stok_tanggal')->get();
+                $jumlahSisa = $jumlah;
+
+                foreach ($stok as $s) {
+                    if ($jumlahSisa <= 0) break;
+
+                    if ($s->stok_jumlah <= $jumlahSisa) {
+                        $jumlahSisa -= $s->stok_jumlah;
+                        $s->delete(); // hapus stok karena habis
+                    } else {
+                        $s->stok_jumlah -= $jumlahSisa;
+                        $s->save();
+                        $jumlahSisa = 0;
+                    }
+                }
+
+                // Hapus barang jika stoknya sudah 0
+                $stokSekarang = StokModel::where('barang_id', $barangId)->sum('stok_jumlah');
+                if ($stokSekarang <= 0) {
+                    $barang->delete();
+                }
             }
 
-            PenjualanModel::create($request->all());
+            DB::commit();
 
             return response()->json([
                 'status'  => true,
                 'message' => 'Data penjualan berhasil disimpan.',
             ]);
-        }
 
-        return redirect('/');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ]);
+        }
     }
+
+    return redirect('/');
+}
 
     public function edit_ajax(string $id)
     {
@@ -246,58 +335,63 @@ class PenjualanController extends Controller
     }
 
     public function import_ajax(Request $request)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = ['file_penjualan' => 'required|mimes:xlsx|max:1024'];
-            $validator = Validator::make($request->all(), $rules);
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = ['file_penjualan' => 'required|mimes:xlsx|max:1024'];
+        $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors()
-                ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        $file = $request->file('file_penjualan');
+        $reader = IOFactory::createReader('Xlsx');
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray(null, false, true, true);
+
+        $insert = [];
+        if (count($data) > 1) {
+            foreach ($data as $baris => $value) {
+                if ($baris > 1) {
+                    $insert[] = [
+                        'user_id'           => $value['A'],
+                        'pembeli'           => $value['B'],
+                        'penjualan_kode'    => $value['C'],
+                        'penjualan_tanggal' => $value['D'],
+                        'created_at'        => now(),
+                    ];
+                }
             }
 
-            $file = $request->file('file_penjualan');
-            $reader = IOFactory::createReader('Xlsx');
-            $reader->setReadDataOnly(true);
-            $spreadsheet = $reader->load($file->getRealPath());
-            $sheet = $spreadsheet->getActiveSheet();
-            $data = $sheet->toArray(null, false, true, true);
-
-            $insert = [];
-            if (count($data) > 1) {
-                foreach ($data as $baris => $value) {
-                    if ($baris > 1) {
-                        $insert[] = [
-                            'user_id'           => $value['A'],
-                            'pembeli'           => $value['B'],
-                            'penjualan_kode'    => $value['C'],
-                            'penjualan_tanggal' => $value['D'],
-                            'created_at'        => now(),
-                        ];
-                    }
-                }
-
-                if (count($insert) > 0) {
-                    PenjualanModel::insertOrIgnore($insert);
-                }
-
+            if (count($insert) > 0) {
+                PenjualanModel::insertOrIgnore($insert);
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil diimport'
                 ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Tidak ada data yang diimport'
-                ]);
             }
-        }
 
-        return redirect('/');
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada data yang valid untuk diimport'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada data dalam file'
+            ]);
+        }
     }
+
+    return redirect('/');
+}
+
 
     public function export_excel()
     {
@@ -364,4 +458,16 @@ class PenjualanController extends Controller
 
         return $pdf->stream('Data Penjualan '.date('Y-m-d H:i:s').'.pdf');
     }
+
+    public function chartData()
+    {
+        $salesData = PenjualanModel::join('t_penjualan_detail', 't_penjualan.penjualan_id', '=', 't_penjualan_detail.penjualan_id')
+            ->selectRaw("DATE_FORMAT(penjualan_tanggal, '%Y-%m-%d') as date, SUM(harga * jumlah) as total")
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        return response()->json($salesData);
+    }
+
 }
