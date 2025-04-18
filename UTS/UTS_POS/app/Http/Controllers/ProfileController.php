@@ -29,33 +29,41 @@ class ProfileController extends Controller
         return view('profile.edit_pfp', compact('user'));
     }
     public function updatePfp(Request $request)
-    {
-        $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+{
+    $validator = \Validator::make($request->all(), [
+        'username' => 'required|string|max:100',
+        'nama' => 'required|string|max:100',
+        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validasi gagal.',
+            'msgField' => $validator->errors()
         ]);
-
-        $user = Auth::user();
-
-        // Hapus foto lama jika bukan default
-        if ($user->profile_picture && $user->profile_picture !== 'default-profile.png') {
-            Storage::delete('public/uploads/profile_images/' . $user->profile_picture);
-        }
-
-        if ($request->hasFile('profile_picture')) {
-            $filename = 'pfp_' . $user->user_id . '.' . $request->file('profile_picture')->getClientOriginalExtension();
-            $request->file('profile_picture')->storeAs('public/uploads/profile_images', $filename);
-
-            $user->profile_picture = $filename;
-            $user->save();
-
-            return response()->json([
-                'message' => 'Foto profil berhasil diperbarui.',
-                'new_profile_picture_url' => asset('storage/uploads/profile_images/' . $filename)
-            ]);
-        }
-
-        return response()->json(['message' => 'Tidak ada foto yang dipilih.'], 400);
     }
+
+    $user = Auth::user();
+    $user->username = $request->username;
+    $user->nama = $request->nama;
+
+    if ($request->hasFile('profile_picture')) {
+        $filename = 'pfp_' . $user->user_id . '.' . $request->file('profile_picture')->getClientOriginalExtension();
+        $path = $request->file('profile_picture')->storeAs('public/uploads/profile_images', $filename);
+        $user->profile_picture = $filename;
+    }
+
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Profil berhasil diperbarui.',
+        'new_profile_picture_url' => asset('storage/uploads/profile_images/' . $user->profile_picture)
+    ]);
+}
+
+
 
     public function deletePfp(Request $request)
     {

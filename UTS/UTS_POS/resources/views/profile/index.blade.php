@@ -4,7 +4,9 @@
     <div class="card-header">
         <h3 class="card-title">Profil Pengguna</h3>
         <div class="card-tools">
-            <button onclick="modalAction('{{ route('profile.editPfp') }}')" class="btn btn-primary">Edit Foto Profil</button>
+            <button onclick="modalAction('{{ route('profile.editPfp') }}')" class="btn btn-primary btn-sm p-2" title="Edit Foto Profil">
+                <i class="fas fa-edit"></i>
+            </button>
             {{-- Tambahkan tombol lain jika dibutuhkan --}}
         </div>
     </div>
